@@ -11,6 +11,7 @@ import 'package:freelance/Provider/kafiilprovider.dart';
 import 'package:freelance/Provider/nafezlyprovider.dart';
 import 'package:freelance/Provider/presentationprovider.dart';
 import 'package:freelance/Screens/%20Presentation-edit.dart';
+import 'package:freelance/Screens/Archives.dart';
 import 'package:freelance/Screens/Home.dart';
 import 'package:freelance/Screens/Offers.dart';
 import 'package:freelance/Screens/Settings.dart';
@@ -62,9 +63,9 @@ class start extends StatelessWidget {
           'Test': (context) => const Test(),
           'Home': (context) => const Home(),
           'Settings': (context) => const Settings(),
-
+          'Archives': (context) => const Archives(),
         },
-        initialRoute: 'Settings',
+        initialRoute: 'Home',
         debugShowCheckedModeBanner: false,
       ),  
     );

@@ -48,6 +48,13 @@ dependencies:
   flutter_spinkit: ^5.2.0
 
 
+flutter_icons:
+  image_path: "assets/ic_launcher.png" 
+  adaptive_icon_background: "assets/ic_launcher.png" # only available for Android 8.0 devices and above
+  adaptive_icon_foreground: "assets/ic_launcher.png" # only available for Android 8.0 devices and above
+  android: true
+  ios: true
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

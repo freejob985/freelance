@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:freelance/Helper_functions/apiclass.dart';
+import 'package:freelance/Models/fun.dart';
+import 'package:freelance/Models/words.dart';
 import 'package:http/http.dart' as http;
 
 class Settingsprovider  with ChangeNotifier {
@@ -16,6 +19,23 @@ List<Map<String, dynamic>> data = [];
 
   List<dynamic> results = [];
   int count = 0;
+
+  List<Fun> _Fun = [];
+
+  List<Fun> get fun => _Fun;
+
+
+
+ Future<void> fetchDatax() async {
+    try {
+      List<Fun> data = await Apiclass.fetch<Fun>('fun',datasql: 'words' ,fromJson: (json) => Fun.fromJson(json));
+      _Fun = data;
+      notifyListeners();
+    } catch (e) {
+      print('حدث خطأ أثناء جلب البيانات: $e');
+    }
+  }
+
 
 
 Future<int?> fetchTotalRecords() async {
@@ -79,7 +99,6 @@ return _totalRecords;
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
-print(data);
         return data;
       } else {
         throw Exception('Failed to load data');
@@ -91,6 +110,25 @@ print(data);
 
 
   Future<Map<String, dynamic>> deleteAllData(String endpoint) async {
+    try {
+      final Uri uri = Uri.parse('$baseUrl/$endpoint');
+      final response = await http.get(uri);
+print(response.body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+
+        return data;
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+
+  Future<Map<String, dynamic>> api(String endpoint) async {
     try {
       final Uri uri = Uri.parse('$baseUrl/$endpoint');
       final response = await http.get(uri);

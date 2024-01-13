@@ -19,101 +19,112 @@ class Words extends StatefulWidget {
 class _WordsState extends State<Words> {
   late Wordsprovider _words;
   final TextEditingController _keywordController = TextEditingController();
+  bool isLoading = false;
 
+  @override
   void initState() {
     super.initState();
     _words = provider.Provider.of<Wordsprovider>(context, listen: false);
-    _words.fetchData();
+    _fetchData();
   }
 
+  void _fetchData() async {
+    setState(() {
+      isLoading = true;
+    });
 
+    await _words.fetchData();
+
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Directionality(
- textDirection: TextDirection.rtl,
+      textDirection: TextDirection.rtl,
       child: Scaffold(
         appBar: AppBar(
-    backgroundColor: Color.fromARGB(255, 103, 207, 107),
-          title:  Text('الكلمات الدلالية',
- style: TextStyle_(
+          backgroundColor: Color.fromARGB(255, 103, 207, 107),
+          title: Text(
+            'الكلمات الدلالية',
+            style: TextStyle_(
               fontSize: 20,
               color: const Color.fromARGB(255, 255, 255, 255),
-            )),
+            ),
+          ),
         ),
         body: Directionality(
-    textDirection: TextDirection.rtl,
+          textDirection: TextDirection.rtl,
           child: Consumer<Wordsprovider>(
             builder: (context, myType, child) {
-              return Directionality(
-                textDirection: TextDirection.rtl,
-                child: ListView.builder(
-                  itemCount: myType.word.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final item = myType.word[index];
-                    int? id = item.id;
-                    String? words = item.words;
-                    return Container(
-                      child: Slidable(
-                        endActionPane: ActionPane(
-                          motion: StretchMotion(),
-                          children: [
-                            SlidableAction(
-                              onPressed: (val) {
-                    
-                    _words.delate_row(id.toString() , context);
-                    
-                    },
-                              icon: Icons.delete,
-                              backgroundColor: Colors.red.shade300,
-                              borderRadius: BorderRadius.circular(0),
-                            )
-                          ],
-                        ),
-                        startActionPane: ActionPane(
-                          motion: StretchMotion(),
-                          children: [
-                            SlidableAction(
-                              onPressed: (val) {
-           SessionManager.setSession(
-                                            'Presentation', id.toString());
-                    Navigator.pushNamed(context, "Presentation");
-        
-        
-        },
-                              icon: Icons.opacity_outlined,
-                              backgroundColor: Color.fromARGB(255, 69, 146, 100),
-                              borderRadius: BorderRadius.circular(0),
-                            )
-                          ],
-                        ),
-                        child: GestureDetector(
-                          child: Card(
-                            elevation: 0, // يمكنك تعديل قيمة الارتفاع حسب الحاجة
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  0), // قم بتعيين قيمة التدريج حسب الحاجة
+              return isLoading
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : ListView.builder(
+                      itemCount: myType.word.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final item = myType.word[index];
+                        int? id = item.id;
+                        String? words = item.words;
+
+                        return Container(
+                          child: Slidable(
+                            endActionPane: ActionPane(
+                              motion: StretchMotion(),
+                              children: [
+                                SlidableAction(
+                                  onPressed: (val) {
+                                    _words.delate_row(id.toString(), context);
+                                  },
+                                  icon: Icons.delete,
+                                  backgroundColor: Colors.red.shade300,
+                                  borderRadius: BorderRadius.circular(0),
+                                )
+                              ],
                             ),
-                            color: const Color.fromARGB(255, 227, 229,
-                                230), // يمكنك استبدال هذا بلون خلفية آخر
-                    
-                            child: ListTile(
-                              leading: Icon(Icons.text_fields),
-                              title: Text(words ,style: TextStyle_( fontSize: 15),),
-                              // يمكنك إضافة المزيد من التفاصيل أو التفاعلات هنا
+                            startActionPane: ActionPane(
+                              motion: StretchMotion(),
+                              children: [
+                                SlidableAction(
+                                  onPressed: (val) {
+                                    SessionManager.setSession(
+                                        'Presentation', id.toString());
+                                    Navigator.pushNamed(context, "Presentation");
+                                  },
+                                  icon: Icons.opacity_outlined,
+                                  backgroundColor: Color.fromARGB(255, 69, 146, 100),
+                                  borderRadius: BorderRadius.circular(0),
+                                )
+                              ],
+                            ),
+                            child: GestureDetector(
+                              child: Card(
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(0),
+                                ),
+                                color: const Color.fromARGB(255, 227, 229, 230),
+                                child: ListTile(
+                                  leading: Icon(Icons.text_fields),
+                                  title: Text(
+                                    words ?? '',
+                                    style: TextStyle_(fontSize: 15),
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
+                        );
+                      },
                     );
-                  },
-                ),
-              );
             },
           ),
         ),
         drawer: Drawer_app(),
-      bottomNavigationBar: BottomAppBar_(),
+        bottomNavigationBar: BottomAppBar_(),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () {
@@ -125,10 +136,9 @@ class _WordsState extends State<Words> {
     );
   }
 
-
- void dispose() {
-    // _words.dispose();
-  _keywordController.dispose();
+  @override
+  void dispose() {
+    _keywordController.dispose();
     super.dispose();
   }
 }

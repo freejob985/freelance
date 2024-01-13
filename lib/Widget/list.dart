@@ -1,4 +1,6 @@
-    import 'package:flutter/material.dart';
+    import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:freelance/Provider/OffersProvider.dart';
 
 import 'kit.dart';
@@ -26,7 +28,7 @@ List<IconData> icons = [
       'لينكد ان',
       'كلمات دلالية',
       'ساعد',
-      'عروض 12' ,
+      'عروض ' ,
       'اعدادت',
       'شغل اون لاين',
       'سحب بيانات',
@@ -104,7 +106,7 @@ List<IconData> icons = [
     }
     ,
     
-      () => { print("OK")},
+      () => {      exit(0)},
     ];
     return buttonFunctions;
   }

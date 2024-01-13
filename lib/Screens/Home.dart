@@ -84,7 +84,7 @@ class Home extends StatelessWidget {
           },
         ),
         drawer: Drawer_app(),
-        bottomNavigationBar: BottomAppBar_(),
+        // bottomNavigationBar: BottomAppBar_(),
       ),
     );
   }

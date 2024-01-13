@@ -6,7 +6,6 @@ import 'package:freelance/Provider/Settingsprovider.dart';
 import 'package:freelance/Widget/BottomAppBar_.dart';
 import 'package:freelance/Widget/Drawer_app.dart';
 import 'package:provider/provider.dart';
-import 'package:provider/provider.dart' as provider;
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -19,32 +18,35 @@ class _SettingsState extends State<Settings> {
   int? totalRecords;
   int? offer;
   bool isLoading = false;
-  late OffersProvider _OffersProvider;
+  late OffersProvider _offersProvider;
 
+  @override
+  void initState() {
+    _offersProvider = Provider.of<OffersProvider>(context, listen: false);
+    super.initState();
+    greet();
+  }
 
   void greet() async {
     setState(() {
       isLoading = true;
     });
 
-    int? result = await Provider.of<Settingsprovider>(context, listen: false).fetchTotalRecords();
-    final Map<String, dynamic> data = await Provider.of<Settingsprovider>(context, listen: false).fetchData("order");
+    int? result =
+        await Provider.of<Settingsprovider>(context, listen: false)
+            .fetchTotalRecords();
+    final Map<String, dynamic> data =
+        await Provider.of<Settingsprovider>(context, listen: false)
+            .fetchData("order");
 
     setState(() {
       totalRecords = result ?? 0;
-      offer = data['count'] ?? "";
+      offer = data['count'] ?? 0;
       isLoading = false;
     });
   }
 
   @override
-  void initState() {
- _OffersProvider =
-        provider.Provider.of<OffersProvider>(context, listen: false);
-    super.initState();
-    greet();
-  }
-
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -65,125 +67,91 @@ class _SettingsState extends State<Settings> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Expanded(
-                      child: Container(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Provider.of<Settingsprovider>(context, listen: false).fetchTotalRecords();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.blue,
-                            padding: const EdgeInsets.all(16.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              side: BorderSide(color: Colors.blueAccent),
-                            ),
-                          ),
-                          child: buildButtonContent(Icons.settings, 'عدد العروض الكلي :  ${totalRecords ?? ''}'),
-                        ),
-                      ),
+                    buildElevatedButton(
+                      onPressed: () {
+                        Provider.of<Settingsprovider>(context, listen: false)
+                            .fetchTotalRecords();
+                      },
+                      primary: Colors.blue,
+                      icon: Icons.settings,
+                      label: 'عدد العروض الكلي :  ${totalRecords ?? ''}',
                     ),
                     SizedBox(height: 16.0),
-                    Expanded(
-                      child: Container(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            Navigator.pushNamed(context, 'Offers');
-                          },
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.green,
-                            padding: const EdgeInsets.all(16.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              side: BorderSide(color: Colors.greenAccent),
-                            ),
-                          ),
-                          child: buildButtonContent(Icons.color_lens, 'العروض المتاحة :  $offer'),
-                        ),
-                      ),
+                    buildElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, 'Offers');
+                      },
+                      primary: Colors.green,
+                      icon: Icons.color_lens,
+                      label: 'العروض المتاحة :  $offer',
                     ),
                     SizedBox(height: 16.0),
-                    Expanded(
-                      child: Container(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            final Map<String, dynamic> datax =
-                                await Provider.of<Settingsprovider>(context, listen: false).deleteAllData("deleteAllData");
-                            greet();
-
-                            showNotification(context, title: "", message: datax['message']);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.orange,
-                            padding: const EdgeInsets.all(16.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              side: BorderSide(color: Colors.orangeAccent),
-                            ),
-                          ),
-                          child: buildButtonContent(Icons.brightness_6, 'حذف العروض'),
-                        ),
-                      ),
+                    buildElevatedButton(
+                      onPressed: () async {
+                        final Map<String, dynamic> datax =
+                            await Provider.of<Settingsprovider>(context,
+                                    listen: false)
+                                .deleteAllData("deleteAllData");
+                        greet();
+                        showNotification(
+                            context, title: "", message: datax['message']);
+                      },
+                      primary: Colors.orange,
+                      icon: Icons.brightness_6,
+                      label: 'حذف العروض',
                     ),
                     SizedBox(height: 16.0),
-                    Expanded(
-                      child: Container(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-    //  _offersProvider.executeFreelancingOrderKhamsat();
-    //   _offersProvider.executeFreelancingOrdermostaql();
-    // _offersProvider.executeFreelancingOrderKhamsat();
-    // _offersProvider.executeFreelancingOrdernafezly();
-
-Provider.of<OffersProvider>(context, listen: false).executeFreelancingOrderKhamsat();
-Provider.of<OffersProvider>(context, listen: false).executeFreelancingOrdermostaql();
-Provider.of<OffersProvider>(context, listen: false).executeFreelancingOrderKhamsat();
-Provider.of<OffersProvider>(context, listen: false).executeFreelancingOrdernafezly();
-
-
-                            Navigator.pushNamed(context, 'Settings');
-                          },
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.purple,
-                            padding: const EdgeInsets.all(16.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              side: BorderSide(color: Colors.purpleAccent),
-                            ),
-                          ),
-                          child: buildButtonContent(Icons.notifications, 'أعادة تنشيط'),
-                        ),
-                      ),
+                    buildElevatedButton(
+                      onPressed: () {
+greet();
+                        _offersProvider.executeFreelancingOrderKhamsat();
+                        _offersProvider.executeFreelancingOrdermostaql();
+                        _offersProvider.executeFreelancingOrderKhamsat();
+                        _offersProvider.executeFreelancingOrdernafezly();
+                      },
+                      primary: Colors.purple,
+                      icon: Icons.notifications,
+                      label: 'أعادة تنشيط',
                     ),
                     SizedBox(height: 16.0),
-                    Expanded(
-                      child: Container(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // Handle button press
-                          },
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.red,
-                            padding: const EdgeInsets.all(16.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              side: BorderSide(color: Colors.redAccent),
-                            ),
-                          ),
-                          child: buildButtonContent(Icons.security, 'Security'),
-                        ),
-                      ),
+                    buildElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, 'Archives');
+                      },
+                      primary: Colors.red,
+                      icon: Icons.security,
+                      label: 'ارشيف السحب',
                     ),
                   ],
                 ),
               ),
         drawer: Drawer_app(),
         bottomNavigationBar: BottomAppBar_(),
+      ),
+    );
+  }
+
+  Widget buildElevatedButton({
+    required VoidCallback onPressed,
+    required Color primary,
+    required IconData icon,
+    required String label,
+  }) {
+    return Expanded(
+      child: Container(
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: onPressed,
+          style: ElevatedButton.styleFrom(
+            primary: primary,
+            padding: const EdgeInsets.all(16.0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              side: BorderSide(color: primary),
+            ),
+          ),
+          child: buildButtonContent(icon, label),
+        ),
       ),
     );
   }
@@ -195,7 +163,7 @@ Provider.of<OffersProvider>(context, listen: false).executeFreelancingOrdernafez
       children: [
         Text(
           label,
-              style: TextStyle_(fontSize: 15, color: Colors.white),
+          style: TextStyle_(fontSize: 15, color: Colors.white),
         ),
         SizedBox(width: 8.0),
         Icon(icon, color: Colors.white),
